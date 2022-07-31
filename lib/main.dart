@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:altor_assignment/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 

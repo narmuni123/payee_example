@@ -21,13 +21,13 @@ class AboutModel {
 
 class Rows {
   Rows({
-    this.title,
-    this.description,
-    this.imageHref,
+    required this.title,
+    required this.description,
+    required this.imageHref,
   });
-  late final String? title;
-  late final String? description;
-  late final String? imageHref;
+  late final String title;
+  late final String description;
+  late final String imageHref;
 
   Rows.fromJson(Map<String, dynamic> json){
     title = json["title"] ?? "";
