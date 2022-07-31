@@ -1,9 +1,7 @@
 import 'dart:convert';
-
 import 'package:altor_assignment/model/about_model.dart';
 import 'package:altor_assignment/reusables/k_widget.dart';
 import 'package:altor_assignment/services/rest_api.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,8 +14,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   AboutModel? aboutModel;
 
-  final ScrollController _scrollController = ScrollController();
-
   late Future getAboutDataFuture;
 
   List<Rows> itemList = [];
@@ -27,13 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   RestApi restApi = RestApi();
 
-  @override
-  void initState() {
-    super.initState();
-    getData();
-  }
-
   Future<dynamic> getData() async {
+    // initial method
     final response = await restApi.getData();
 
     if (response.statusCode == 200) {
@@ -42,10 +33,13 @@ class _HomeScreenState extends State<HomeScreen> {
         aboutModel = AboutModel.fromJson(newItems);
         itemList = aboutModel!.rows;
       });
+    }else{
+      showErrorDialog(context, "Error, try again later.");
     }
   }
 
   Future refresh() async{
+    // refresh functionality
     setState(() {
       isLoading = false;
       itemList.clear();
@@ -90,25 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: ListTile(
                         leading: ClipRRect(
                           borderRadius: BorderRadius.circular(15),
-                          child: CachedNetworkImage(
-                            imageUrl: itemList[index].imageHref,
-                            height: size.height * 0.2,
-                            width: size.width * 0.2,
-                            imageBuilder: (context, imageProvider) =>
-                                Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover),
-                                  ),
-                                ),
-                            errorWidget: (context, url, error) =>
-                            const Center(
-                              child:  Icon(
-                                Icons.person_outline,
-                              ),
-                            ),
-                          ),
+                          child: displayImage(itemList[index].imageHref, size.height * 0.2, size.width * 0.2),
                         ),
                         title: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
